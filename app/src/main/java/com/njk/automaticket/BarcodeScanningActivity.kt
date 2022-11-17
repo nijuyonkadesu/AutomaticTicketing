@@ -25,7 +25,6 @@ class BarcodeScanningActivity: AppCompatActivity() {
 
     // Inflate layout
     private lateinit var binding: FragmentRfidBinding
-//    private lateinit var binding: FragmentBarcodeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

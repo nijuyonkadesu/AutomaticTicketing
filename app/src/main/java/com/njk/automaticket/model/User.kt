@@ -1,13 +1,13 @@
 package com.njk.automaticket.model
 
 data class User(
-    val rfid: Int,
-    val walletBalance: Int,
-    val pendingPayment: Int,
-    val ticketStatus: TicketStatus,
-    val tokenFcm: FcmToken,
-    val startDestination: Int,
-    val endDestination: Int,
+    var rfid: Int = 0,
+    var walletBalance: Int = 0,
+    var pendingPayment: Int = 0,
+    var ticketStatus: TicketStatus = TicketStatus.INVALID,
+    var tokenFcm: FcmToken = FcmToken("zero"),
+    var startDestination: Int = 0,
+    var endDestination: Int = 0,
 )
 enum class TicketStatus {
     VALID, INVALID
