@@ -5,7 +5,7 @@ data class User(
     val walletBalance: Int,
     val pendingPayment: Int,
     val ticketStatus: TicketStatus,
-//    val tokenFcm: String,
+    val tokenFcm: FcmToken,
 )
 enum class TicketStatus {
     VALID, INVALID
