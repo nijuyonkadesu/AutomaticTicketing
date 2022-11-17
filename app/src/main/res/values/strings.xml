@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Move it</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="rfid_scan_nav">RFID</string>
+    <string name="home_nav">Home</string>
+    <string name="ticket_nav">Ticket</string>
+
+</resources>
