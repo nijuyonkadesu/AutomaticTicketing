@@ -9,40 +9,13 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.njk.moveit.model.FcmToken
-import com.njk.moveit.model.User
+import com.njk.automaticket.model.FcmToken
+import com.njk.automaticket.model.User
+
 
 const val URL = "https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/"
 const val TAG = "firebase"
 
 class UserViewModel: ViewModel() {
 
-//    private val database = FirebaseDatabase.getInstance(URL).getReference("Users")
-    private val database = Firebase.database(URL).getReference("Users")
-    private fun firebaseFcmToken(context: Context, user: User){
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(
-            OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                context.getSharedPreferences("_", FirebaseMessagingService.MODE_PRIVATE)?.edit()?.putString("fcm", task.result)?.apply()
-                Log.d("firebase", "new FCM token: ${task.result}")
-            })
-    }
-
-    fun firebaseId(context: Context, user: User){
-        FirebaseInstallations.getInstance().id.addOnCompleteListener(
-            OnCompleteListener { task ->
-                if(!task.isSuccessful) {
-                    Log.w(TAG, "Fetching Unique ID failed", task.exception)
-                    return@OnCompleteListener
-                }
-                val token = FcmToken(task.result)
-                database.child(task.result).setValue(token)
-                context.getSharedPreferences("_", FirebaseMessagingService.MODE_PRIVATE)?.edit()?.putString("id", task.result)?.apply()
-                Log.d("firebase", "new unique Token: ${task.result}")
-            })
-    }
 }

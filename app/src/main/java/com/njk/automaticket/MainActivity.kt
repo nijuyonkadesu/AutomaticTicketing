@@ -45,10 +45,7 @@ class MainActivity : AppCompatActivity() {
         setupBottomNavMenu(navController)
 
         // Request camera permissions
-        if (allPermissionsGranted()) {
-            // startCamera()
-            // TODO replace with navigation
-        } else {
+        if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
@@ -90,10 +87,7 @@ class MainActivity : AppCompatActivity() {
         requestCode: Int, permissions: Array<String>, grantResults:
         IntArray) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                // startCamera()
-                // TODO: replace with navigation
-            } else {
+            if (!allPermissionsGranted()) {
                 Toast.makeText(this,
                     "Permissions not granted by the user.",
                     Toast.LENGTH_SHORT).show()

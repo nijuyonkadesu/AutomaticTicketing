@@ -11,15 +11,13 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.installations.FirebaseInstallations
-import com.google.firebase.installations.remote.FirebaseInstallationServiceClient
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.njk.automaticket.databinding.FragmentHomeBinding
-import com.njk.automaticket.model.UniqueId
-import com.njk.moveit.model.TicketStatus
-import com.njk.moveit.model.FcmToken
-import com.njk.moveit.model.User
+import com.njk.automaticket.model.FcmToken
+import com.njk.automaticket.model.TicketStatus
+import com.njk.automaticket.model.User
 import com.njk.moveit.viewmodels.TAG
 import com.njk.moveit.viewmodels.URL
 
@@ -88,11 +86,13 @@ class HomeFragment : Fragment() {
 
     private fun createUser(fcm: FcmToken): User {
         return User(
-            8787,
+            8787, // TODO: Get rfid from BarcodeScanning Activity
             1000,
-            10,
+            0, // TODO: Calculate from distance, accumulate, subtract, reset
             TicketStatus.INVALID,
-            fcm
+            fcm,
+            0, // 0 because, this function is ran just once when user installs the app
+            0,
         )
     }
 }
