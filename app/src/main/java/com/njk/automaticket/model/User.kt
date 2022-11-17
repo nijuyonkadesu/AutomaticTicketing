@@ -1,5 +1,7 @@
 package com.njk.automaticket.model
 
+import com.google.firebase.database.Exclude
+
 data class User(
     var rfid: Int = 0,
     var walletBalance: Int = 0,
@@ -8,7 +10,20 @@ data class User(
     var tokenFcm: FcmToken = FcmToken("zero"),
     var startDestination: Int = 0,
     var endDestination: Int = 0,
-)
+) {
+    @Exclude
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "rfid" to rfid,
+            "walletBalance" to walletBalance,
+            "pendingPayment" to pendingPayment,
+            "ticketStatus" to ticketStatus,
+            "tokenFcm" to tokenFcm,
+            "startDestination" to startDestination,
+            "endDestination" to endDestination,
+        )
+    }
+}
 enum class TicketStatus {
     VALID, INVALID
 }

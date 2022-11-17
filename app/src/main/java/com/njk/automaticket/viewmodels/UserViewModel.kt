@@ -14,6 +14,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
+import kotlin.math.abs
 
 
 const val URL = "https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -55,13 +56,13 @@ class UserViewModel: ViewModel() {
     }
     private fun createUser(fcm: FcmToken): User {
         return User(
-            8787, // TODO: Get rfid from BarcodeScanning Activity
+            212333433, // TODO: Get rfid from BarcodeScanning Activity
             1000,
-            0, // TODO: Calculate from distance, accumulate, subtract, reset
+            100, // TODO: Calculate from distance, accumulate, subtract, reset
             TicketStatus.INVALID,
             fcm,
-            0, // 0 because, this function is ran just once when user installs the app
-            0,
+            20, // 0 because, this function is ran just once when user installs the app
+            100,
         )
     }
 
@@ -75,9 +76,43 @@ class UserViewModel: ViewModel() {
 
         // data snapshot of User
         database.child(id).get().addOnSuccessListener {
-            val user = it.getValue<User>()
-            Log.d(TAG, user?.tokenFcm?.fcm ?: "fail")
-            Toast.makeText(context, user?.tokenFcm?.fcm ?: "fail", Toast.LENGTH_SHORT).show()
+            val user = it.getValue<User>()!!
+//            Toast.makeText(context, user?.tokenFcm?.fcm ?: "fail", Toast.LENGTH_SHORT).show()
+
+            /* PAYMENT LOGIC START */
+
+            val distance = abs(user.startDestination - user.endDestination)
+
+            // Magic mathematical ratio to calculate, used with distance
+            val magicNumber = 10
+            val pendingPaymentCalculated = user.pendingPayment + distance * magicNumber
+            //                                 ^ accumulation of old pending payment
+
+            Toast.makeText(context, "$pendingPaymentCalculated", Toast.LENGTH_SHORT).show()
+            if (user.walletBalance >= pendingPaymentCalculated) {
+                user.apply {
+                    walletBalance -= pendingPaymentCalculated
+                    pendingPayment = 0
+                }
+            } else {
+                user.apply {
+                    pendingPayment = pendingPaymentCalculated
+                }
+            }
+
+            /* PAYMENT LOGIC END */
+
+            // make hash map, and update to database
+            val userValues = user.toMap()
+            val childUpdates = hashMapOf<String, Any>(
+                "/$id/" to userValues
+            )
+
+            // update database
+            database.updateChildren(childUpdates)
+
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error: Please Try again!", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -91,7 +126,7 @@ class UserViewModel: ViewModel() {
 *
 * pendingPayment = distance x magic number
 *  - if balance < pendingPayment
-*    >- don't touch anything
+*    >- update pendingPayment
 *  - else
 *    >- balance = balance - pendingPayment
 *    >- pendingPayment is 0 onSuccess
