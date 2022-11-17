@@ -61,6 +61,7 @@ class HomeFragment : Fragment() {
                     context?.getSharedPreferences("_", MODE_PRIVATE)?.edit()?.putString("id", task.result)?.apply()
                     Log.d("firebase", "new unique Token: ${task.result}")
                 })
+            // TODO: Implement the same in a separate class by extending
             FirebaseMessaging.getInstance().token.addOnCompleteListener(
                 OnCompleteListener { task ->
                     if (!task.isSuccessful) {

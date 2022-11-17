@@ -14,8 +14,13 @@
         android:id="@+id/ticket_dest"
         android:name="com.njk.automaticket.TicketFragment"
         android:label="Ticket Info" />
-    <fragment
+<!--    <fragment-->
+<!--        android:id="@+id/rfid_dest"-->
+<!--        android:name="com.njk.automaticket.RfidFragment"-->
+<!--        android:label="Link RFID" />-->
+    <activity
         android:id="@+id/rfid_dest"
-        android:name="com.njk.automaticket.RfidFragment"
-        android:label="Link RFID" />
+        android:name="com.njk.automaticket.BarcodeScanningActivity"
+        android:label="fragment_barcode"
+        tools:layout="@layout/fragment_rfid" />
 </navigation>
