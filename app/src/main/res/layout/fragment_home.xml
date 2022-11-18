@@ -18,17 +18,49 @@
             android:text="User Test"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/distance_fb"
+            app:layout_constraintTop_toBottomOf="@+id/ticket_fb" />
+
         <Button
             android:id="@+id/pay_test_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Simulate Payment"
             android:layout_marginTop="16dp"
+            android:text="Simulate Payment"
             app:layout_constraintEnd_toEndOf="@id/test_btn"
             app:layout_constraintStart_toStartOf="@id/test_btn"
             app:layout_constraintTop_toBottomOf="@id/test_btn" />
+
+        <TextView
+            android:id="@+id/payment_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment"
+            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/distance_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="@string/distance"
+            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            app:layout_constraintEnd_toEndOf="@+id/payment_fb"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/payment_fb"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ticket_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:src="@drawable/ticket_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/distance_fb" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

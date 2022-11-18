@@ -7,5 +7,8 @@
     <string name="rfid_scan_nav">RFID</string>
     <string name="home_nav">Home</string>
     <string name="ticket_nav">Ticket</string>
+    <string name="payment">Payment: %s</string>
+    <string name="balance">Balance: %s</string>
+    <string name="distance">Distance: %s</string>
 
 </resources>

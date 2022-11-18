@@ -72,6 +72,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
                     .also {
                         it.setAnalyzer(cameraExecutor, BarcodeAnalyzer ({ code ->
                             Log.d(TAG, "QR: $code")
+
                         }, binding))
                     }
 

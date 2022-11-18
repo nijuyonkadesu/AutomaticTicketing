@@ -5,25 +5,29 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
+import com.njk.automaticket.model.Bus
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
 import kotlin.math.abs
 
 
-const val URL = "https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/"
+//const val URL = "https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/"
 const val TAG = "firebase"
 
 class UserViewModel: ViewModel() {
 
     // Reference to firebase database
-    private val database = Firebase.database(URL).getReference("Users")
+    private val database = Firebase.database("https://esp-firebase-demo-f2096-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
 
     private fun getUserId(context: Context) {
         FirebaseInstallations.getInstance().id.addOnCompleteListener(
@@ -58,7 +62,7 @@ class UserViewModel: ViewModel() {
         return User(
             212333433, // TODO: Get rfid from BarcodeScanning Activity
             1000,
-            100, // TODO: Calculate from distance, accumulate, subtract, reset
+            100,
             TicketStatus.INVALID,
             fcm,
             20, // 0 because, this function is ran just once when user installs the app
@@ -115,9 +119,6 @@ class UserViewModel: ViewModel() {
             Toast.makeText(context, "Error: Please Try again!", Toast.LENGTH_SHORT).show()
         }
 
-    }
-    private fun updatePendingPay(due: Int, id: String) {
-        val balance = database.child(id)
     }
 }
 /*
