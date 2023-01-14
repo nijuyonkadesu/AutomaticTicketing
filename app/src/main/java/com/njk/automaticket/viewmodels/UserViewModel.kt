@@ -27,7 +27,7 @@ const val TAG = "firebase"
 class UserViewModel: ViewModel() {
 
     // Reference to firebase database
-    private val database = Firebase.database("https://esp-firebase-demo-f2096-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
+    private val database = Firebase.database("https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
 
     private fun getUserId(context: Context) {
         FirebaseInstallations.getInstance().id.addOnCompleteListener(
@@ -39,6 +39,7 @@ class UserViewModel: ViewModel() {
                 context.getSharedPreferences("_", Context.MODE_PRIVATE)?.edit()?.putString("id", task.result)?.apply()
                 Log.d("firebase", "new unique Token: ${task.result}")
             })
+        // TODO: Use ROOM #1
     }
     private fun getFcmToken(context: Context){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
@@ -58,6 +59,8 @@ class UserViewModel: ViewModel() {
                 Log.d("firebase", "new FCM token: ${task.result}")
             })
     }
+    // TODO: Use ROOM #2
+    // TODO: + Domain layer + Fallback Offline Data #3
     private fun createUser(fcm: FcmToken): User {
         return User(
             212333433, // TODO: Get rfid from BarcodeScanning Activity

@@ -54,7 +54,9 @@ class HomeFragment : Fragment() {
         _binding = null
     }
     private fun busDatabaseFetch(){
-        val busDatabase = Firebase.database("https://esp-firebase-demo-f2096-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("user1")
+        // also change in userViewModel
+        // TODO: .getReference(Bus)
+        val busDatabase = Firebase.database("https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
         val busDatabaseListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI

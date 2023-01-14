@@ -31,7 +31,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
         binding = FragmentRfidBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO: connect with navigation
+        // TODO: connect with navigation (Backstack Pop and save into Database)
         cameraExecutor = Executors.newSingleThreadExecutor()
         startCamera()
     }
