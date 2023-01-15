@@ -1,4 +1,4 @@
-package com.njk.automaticket
+package com.njk.automaticket.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.njk.automaticket.R
 import com.njk.automaticket.databinding.FragmentHomeBinding
 import com.njk.automaticket.model.Bus
 import com.njk.automaticket.viewmodels.UserViewModel
@@ -63,6 +64,8 @@ class HomeFragment : Fragment() {
                 val bus = dataSnapshot.getValue<Bus>()!!
                 binding.paymentFb.text = getString(R.string.payment, bus.payment.toString())
                 binding.distanceFb.text = getString(R.string.distance, bus.distance.toString())
+                // TODO: Wrap it with LiveData & flow and bind data to layout @{}
+                // https://lgvalle.medium.com/firebase-viewmodels-livedata-cb64c5ee4f95
                 if(bus.ticket_status==0)
                     binding.ticketFb.setImageResource(R.drawable.ticket_grey)
                 else

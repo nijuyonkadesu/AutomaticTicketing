@@ -1,4 +1,4 @@
-package com.njk.automaticket
+package com.njk.automaticket.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
