@@ -15,7 +15,7 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.njk.automaticket.R
 import com.njk.automaticket.databinding.FragmentHomeBinding
-import com.njk.automaticket.model.Bus
+import com.njk.automaticket.firebase.NetworkBus
 import com.njk.automaticket.viewmodels.UserViewModel
 
 /**
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        busDatabaseFetch()
+        getNetworkBus()
 
         binding.testBtn.setOnClickListener {
             sharedViewModel.createNewFirebaseUser(requireContext())
@@ -54,19 +54,19 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    private fun busDatabaseFetch(){
+    private fun getNetworkBus(){
         // also change in userViewModel
         // TODO: .getReference(Bus)
         val busDatabase = Firebase.database("https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
         val busDatabaseListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-                val bus = dataSnapshot.getValue<Bus>()!!
+                val bus = dataSnapshot.getValue<NetworkBus>()!!
                 binding.paymentFb.text = getString(R.string.payment, bus.payment.toString())
                 binding.distanceFb.text = getString(R.string.distance, bus.distance.toString())
                 // TODO: Wrap it with LiveData & flow and bind data to layout @{}
                 // https://lgvalle.medium.com/firebase-viewmodels-livedata-cb64c5ee4f95
-                if(bus.ticket_status==0)
+                if(bus.ticketStatus==0)
                     binding.ticketFb.setImageResource(R.drawable.ticket_grey)
                 else
                     binding.ticketFb.setImageResource(R.drawable.ticket_green)

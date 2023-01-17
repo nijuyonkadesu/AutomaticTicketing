@@ -5,19 +5,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.njk.automaticket.model.Bus
-import com.njk.automaticket.model.FcmToken
-import com.njk.automaticket.model.TicketStatus
-import com.njk.automaticket.model.User
+import com.njk.automaticket.domain.FcmToken
+import com.njk.automaticket.domain.TicketStatus
+import com.njk.automaticket.domain.User
 import kotlin.math.abs
 
 

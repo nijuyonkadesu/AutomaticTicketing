@@ -1,4 +1,4 @@
-package com.njk.automaticket.model
+package com.njk.automaticket.domain
 
 import com.google.firebase.database.Exclude
 

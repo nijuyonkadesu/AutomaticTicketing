@@ -25,7 +25,7 @@ fun getDatabase(context: Context): BusDatabase{
         if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(context.applicationContext,
                 BusDatabase::class.java,
-                "videos").build()
+                "bus").build()
         }
     }
     return INSTANCE
