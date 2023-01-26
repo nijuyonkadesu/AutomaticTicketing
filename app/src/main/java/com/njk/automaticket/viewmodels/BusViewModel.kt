@@ -35,4 +35,9 @@ class BusViewModel : ViewModel() {
         busDatabase.addValueEventListener(networkBusListener)
         return bus
     }
+    init {
+        Firebase.database.setPersistenceEnabled(true)
+        // Enable disk caching, to show data in the absence of network
+    }
+    // TODO: Connection Status https://firebase.google.com/docs/database/android/offline-capabilities
 }

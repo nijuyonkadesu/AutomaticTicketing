@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -14,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
+import com.njk.automaticket.utils.SaveUserRfid
 import kotlin.math.abs
 
 
@@ -35,7 +37,6 @@ class UserViewModel: ViewModel() {
                 context.getSharedPreferences("_", Context.MODE_PRIVATE)?.edit()?.putString("id", task.result)?.apply()
                 Log.d("firebase", "new unique Token: ${task.result}")
             })
-        // TODO: Use ROOM #1
     }
     private fun getFcmToken(context: Context){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
@@ -46,8 +47,9 @@ class UserViewModel: ViewModel() {
                 }
 
                 // Get new FCM registration token
+                // TODO: Shift to dataStore
                 val fcm = FcmToken(task.result)
-                val user = createUser(fcm)
+                val user = createUser(fcm, context)
                 val id = context.getSharedPreferences("_", Context.MODE_PRIVATE)?.getString("id", "fail")!!
 
                 database.child(id).setValue(user)
@@ -55,11 +57,10 @@ class UserViewModel: ViewModel() {
                 Log.d("firebase", "new FCM token: ${task.result}")
             })
     }
-    // TODO: Use ROOM #2
-    // TODO: + Domain layer + Fallback Offline Data #3
-    private fun createUser(fcm: FcmToken): User {
+    private fun createUser(fcm: FcmToken, context: Context): User {
+        val saveUserRfid = SaveUserRfid(context)
         return User(
-            212333433, // TODO: Get rfid from BarcodeScanning Activity
+            saveUserRfid.userRfid.asLiveData().value ?: 0,
             1000,
             100,
             TicketStatus.INVALID,

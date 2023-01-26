@@ -63,7 +63,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.0.3')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     // Firebase Cloud Messaging
-    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation 'com.google.firebase:firebase-messaging-directboot:23.1.1'
 
     // Coroutines PlayServices - to load data from firebase
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'

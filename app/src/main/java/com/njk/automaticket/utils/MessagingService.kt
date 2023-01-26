@@ -13,4 +13,3 @@ class MessagingService: FirebaseMessagingService() {
         super.onMessageReceived(message)
     }
 }
-// TODO: https://firebase.google.com/docs/cloud-messaging/android/receive#edit-the-app-manifest

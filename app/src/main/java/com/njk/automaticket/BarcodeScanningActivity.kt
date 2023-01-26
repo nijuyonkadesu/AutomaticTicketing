@@ -98,7 +98,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
 private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding: FragmentRfidBinding, val context: Context) : ImageAnalysis.Analyzer {
     // Datastore
     private val saveUserRfid = SaveUserRfid(context)
-    private var saveCount = 0
+    private var isSaved = false
 
     @SuppressLint("RestrictedApi")
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
@@ -136,7 +136,7 @@ private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding
                         binding.qr.text = rawText
                         listener(rawText)
 //                        Log.d(TAG, rawText)
-                        if(rawText != "..." && saveCount == 0){
+                        if(rawText != "..." && !isSaved){
                             CoroutineScope(Dispatchers.IO).launch {
                                 saveUserRfid.saveRfid(rawText)
                             }
