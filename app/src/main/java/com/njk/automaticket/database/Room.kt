@@ -9,8 +9,8 @@ interface BusDao {
     @Query("select * from databasebus")
     fun getBus(): Flow<DatabaseBus>
 
-    @Upsert
-    fun insertBus(bus: DatabaseBus)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBus(bus: DatabaseBus)
 }
 
 @Database(entities = [DatabaseBus::class], version = 1)

@@ -1,66 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.HomeFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+        <variable
+            name="bus"
+            type="com.njk.automaticket.viewmodels.BusViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        tools:context=".ui.HomeFragment">
 
-        <Button
-            android:id="@+id/test_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User Test"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/distance_fb"
-            app:layout_constraintTop_toBottomOf="@+id/ticket_fb" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:padding="16dp">
 
-        <Button
-            android:id="@+id/pay_test_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Simulate Payment"
-            app:layout_constraintEnd_toEndOf="@id/test_btn"
-            app:layout_constraintStart_toStartOf="@id/test_btn"
-            app:layout_constraintTop_toBottomOf="@id/test_btn" />
+            <Button
+                android:id="@+id/test_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Test"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/distance_fb"
+                app:layout_constraintTop_toBottomOf="@+id/ticket_fb" />
 
-        <TextView
-            android:id="@+id/payment_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/payment"
-            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/pay_test_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Simulate Payment"
+                app:layout_constraintEnd_toEndOf="@id/test_btn"
+                app:layout_constraintStart_toStartOf="@id/test_btn"
+                app:layout_constraintTop_toBottomOf="@id/test_btn" />
 
-        <TextView
-            android:id="@+id/distance_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:text="@string/distance"
-            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            app:layout_constraintEnd_toEndOf="@+id/payment_fb"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/payment_fb"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/payment_fb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$10"
+                tools:text="Payment: $10"
+                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/ticket_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:src="@drawable/ticket_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/distance_fb" />
+            <TextView
+                android:id="@+id/distance_fb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="10"
+                tools:text="Distance: 300"
+                android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+                app:layout_constraintEnd_toEndOf="@+id/payment_fb"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/payment_fb"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <ImageView
+                android:id="@+id/ticket_fb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="32dp"
+                android:src="@drawable/ticket_grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/distance_fb" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

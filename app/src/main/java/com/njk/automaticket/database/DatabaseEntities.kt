@@ -7,7 +7,7 @@ import com.njk.automaticket.domain.Bus
 
 @Entity
 data class DatabaseBus constructor(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val distance: Double,
     val payment: Double,

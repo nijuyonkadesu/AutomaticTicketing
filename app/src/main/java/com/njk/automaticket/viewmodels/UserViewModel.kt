@@ -23,7 +23,7 @@ const val TAG = "firebase"
 class UserViewModel: ViewModel() {
 
     // Reference to firebase database
-    private val database = Firebase.database("https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
+    private val database = Firebase.database("https://dummyyyyyy-aa5df-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
 
     private fun getUserId(context: Context) {
         FirebaseInstallations.getInstance().id.addOnCompleteListener(
