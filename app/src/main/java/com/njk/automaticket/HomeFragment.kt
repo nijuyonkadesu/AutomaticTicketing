@@ -1,25 +1,17 @@
 package com.njk.automaticket
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
+import androidx.lifecycle.Observer
 import com.njk.automaticket.databinding.FragmentHomeBinding
-import com.njk.automaticket.model.Bus
+import com.njk.automaticket.viewmodels.BusViewModel
 import com.njk.automaticket.viewmodels.UserViewModel
+import java.text.NumberFormat
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -27,7 +19,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private val sharedViewModel: UserViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val busViewModel: BusViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,42 +31,33 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        busDatabaseFetch()
-
-        binding.testBtn.setOnClickListener {
-            sharedViewModel.createNewFirebaseUser(requireContext())
-        }
-        binding.payTestBtn.setOnClickListener {
-            sharedViewModel.initiatePayment(requireContext())
+        binding.apply {
+            busViewModel.getBusDetails().observe(viewLifecycleOwner, Observer {
+                testBtn.setOnClickListener {
+                    userViewModel.createNewFirebaseUser(requireContext())
+                }
+                payTestBtn.setOnClickListener {
+                    userViewModel.initiatePayment(requireContext())
+                }
+                paymentFb.text = getString(
+                    R.string.payment, NumberFormat.getInstance().format(
+                        it.payment
+                    ).toString()
+                )
+                distanceFb.text = getString(
+                    R.string.distance,
+                    it.distance.toString()
+                )
+                if (it.ticketStatus == 0)
+                    binding.ticketFb.setImageResource(R.drawable.ticket_grey)
+                else
+                    binding.ticketFb.setImageResource(R.drawable.ticket_green)
+            })
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-    private fun busDatabaseFetch(){
-        // also change in userViewModel
-        // TODO: .getReference(Bus)
-        val busDatabase = Firebase.database("https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
-        val busDatabaseListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                val bus = dataSnapshot.getValue<Bus>()!!
-                binding.paymentFb.text = getString(R.string.payment, bus.payment.toString())
-                binding.distanceFb.text = getString(R.string.distance, bus.distance.toString())
-                if(bus.ticket_status==0)
-                    binding.ticketFb.setImageResource(R.drawable.ticket_grey)
-                else
-                    binding.ticketFb.setImageResource(R.drawable.ticket_green)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(com.njk.automaticket.viewmodels.TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        busDatabase.addValueEventListener(busDatabaseListener)
     }
 }

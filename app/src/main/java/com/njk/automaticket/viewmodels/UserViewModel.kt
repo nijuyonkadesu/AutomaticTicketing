@@ -5,29 +5,25 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.njk.automaticket.model.Bus
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
 import kotlin.math.abs
 
 
-//const val URL = "https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/"
+const val URL = "https://dummyyyyyy-aa5df-default-rtdb.asia-southeast1.firebasedatabase.app/"
 const val TAG = "firebase"
 
 class UserViewModel: ViewModel() {
 
     // Reference to firebase database
-    private val database = Firebase.database("https://busticketsystem-f2ca3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Users")
+    private val database = Firebase.database(URL).getReference("Users")
 
     private fun getUserId(context: Context) {
         FirebaseInstallations.getInstance().id.addOnCompleteListener(
