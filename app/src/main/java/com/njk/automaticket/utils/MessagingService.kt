@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.njk.automaticket.TAG
 
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class MessagingService: FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
-        Log.d("Message", message.data.toString())
+        Log.d(TAG, message.data.toString())
         super.onMessageReceived(message)
     }
 }
+// TODO: https://firebase.google.com/docs/cloud-messaging/android/receive#edit-the-app-manifest

@@ -1,5 +1,7 @@
 package com.njk.automaticket
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,10 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.njk.automaticket.databinding.FragmentRfidBinding
+import com.njk.automaticket.utils.SaveUserRfid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -73,7 +79,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
                         it.setAnalyzer(cameraExecutor, BarcodeAnalyzer ({ code ->
                             Log.d(TAG, "QR: $code")
 
-                        }, binding))
+                        }, binding, applicationContext))
                     }
 
                 // Bind use cases to camera
@@ -89,8 +95,12 @@ class BarcodeScanningActivity: AppCompatActivity() {
 }
 
 // Trying to get Barcode Scanner
-private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding: FragmentRfidBinding) : ImageAnalysis.Analyzer {
+private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding: FragmentRfidBinding, val context: Context) : ImageAnalysis.Analyzer {
+    // Datastore
+    private val saveUserRfid = SaveUserRfid(context)
+    private var saveCount = 0
 
+    @SuppressLint("RestrictedApi")
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
 
@@ -122,9 +132,15 @@ private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding
                         // See API reference for complete list of supported types
 //                        when (valueType) {
 //                            Barcode.FORMAT_QR_CODE -> {
-                        val rawText = barcode.rawValue ?: "not ok"
+                        val rawText = barcode.rawValue ?: "..."
                         binding.qr.text = rawText
                         listener(rawText)
+//                        Log.d(TAG, rawText)
+                        if(rawText != "..." && saveCount == 0){
+                            CoroutineScope(Dispatchers.IO).launch {
+                                saveUserRfid.saveRfid(rawText)
+                            }
+                        }
 //                            }
 //                        }
                     }

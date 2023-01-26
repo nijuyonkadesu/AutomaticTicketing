@@ -18,13 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AutomaTicket"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AutomaTicket">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -32,15 +32,24 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".BarcodeScanningActivity">
 
+        <activity
+            android:exported="true"
+            android:name=".BarcodeScanningActivity">
         </activity>
+
         <service
             android:name=".utils.MessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/bus"/>
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="1"/>
         </service>
     </application>
 
