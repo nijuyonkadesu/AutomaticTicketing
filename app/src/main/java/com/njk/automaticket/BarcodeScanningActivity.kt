@@ -13,7 +13,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.njk.automaticket.databinding.FragmentRfidBinding
-import com.njk.automaticket.utils.SaveUserRfid
+import com.njk.automaticket.utils.UserDataStore
 import kotlinx.coroutines.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -137,8 +137,8 @@ private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding
                         if(rawText != "..." && !isSaved){
                             isSaved = true
                             CoroutineScope(Dispatchers.IO).launch {
-                                val saveUserRfid = SaveUserRfid(context)
-                                saveUserRfid.saveRfid(rawText)
+                                val userDataStore = UserDataStore(context)
+                                userDataStore.saveRfid(rawText)
                                 Log.d(TAG, "Saving... $rawText")
                             }
                         }

@@ -11,11 +11,11 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
+import com.njk.automaticket.BuildConfig
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
-import com.njk.automaticket.utils.SaveUserRfid
+import com.njk.automaticket.utils.UserDataStore
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -28,15 +28,19 @@ class UserViewModel: ViewModel() {
     // Reference to firebase database
     private val database = Firebase.database(URL).getReference("Users")
 
-    private fun getUserId(context: Context) {
+    private suspend fun getUserId(context: Context) {
         FirebaseInstallations.getInstance().id.addOnCompleteListener(
             OnCompleteListener { task ->
                 if(!task.isSuccessful) {
                     Log.w(TAG, "Fetching Unique ID failed", task.exception)
                     return@OnCompleteListener
                 }
-                context.getSharedPreferences("_", Context.MODE_PRIVATE)?.edit()?.putString("id", task.result)?.apply()
-                Log.d("firebase", "new unique Token: ${task.result}")
+                viewModelScope.launch {
+                    val userDataStore = UserDataStore(context)
+                    userDataStore.saveId(task.result)
+                    if(BuildConfig.DEBUG)
+                        Log.d("firebase", "new unique Token: ${task.result}")
+                }
             })
     }
     private suspend fun getFcmToken(context: Context){
@@ -47,21 +51,23 @@ class UserViewModel: ViewModel() {
                     return@OnCompleteListener
                 }
                 // Get new FCM registration token
-                // TODO: Shift to dataStore
-                val fcm = FcmToken(task.result)
                 viewModelScope.launch {
-                    val id = context.getSharedPreferences("_", Context.MODE_PRIVATE)?.getString("id", "fail")!!
-                    database.child(id).setValue(createUser(fcm, context))
+                    val userDataStore = UserDataStore(context)
+                    userDataStore.saveFcm(task.result)
+
+                    val fcm = FcmToken(userDataStore.getFcm())
+                    database.child(userDataStore.getId()).setValue(createUser(fcm, context))
+                    if(BuildConfig.DEBUG)
+                        Log.d("firebase", "new FCM token: ${task.result}")
                 }
-                context.getSharedPreferences("_", FirebaseMessagingService.MODE_PRIVATE)?.edit()?.putString("fcm", task.result)?.apply()
-                Log.d("firebase", "new FCM token: ${task.result}")
             })
     }
     private suspend fun createUser(fcm: FcmToken, context: Context): User {
-        val saveUserRfid = SaveUserRfid(context)
-        Log.d(TAG, saveUserRfid.getRfid().toString())
+        val userDataStore = UserDataStore(context)
+        if(BuildConfig.DEBUG)
+            Log.d(TAG, userDataStore.getRfid().toString())
         return User(
-            saveUserRfid.getRfid(),
+            userDataStore.getRfid(),
             1000,
             100,
             TicketStatus.INVALID,
@@ -73,55 +79,56 @@ class UserViewModel: ViewModel() {
 
     // Creates a new node in firebase realtime database
     fun createNewFirebaseUser(context: Context){
-        getUserId(context)
         viewModelScope.launch {
+            getUserId(context)
             getFcmToken(context)
         }
     }
     fun initiatePayment(context: Context) {
-        val id = context.getSharedPreferences("_", Context.MODE_PRIVATE)?.getString("id", "fail")!!
-
         // data snapshot of User
-        database.child(id).get().addOnSuccessListener {
-            val user = it.getValue<User>()!!
+        val userDataStore = UserDataStore(context)
+        viewModelScope.launch {
+            val id = userDataStore.getId()
+            database.child(id).get().addOnSuccessListener {
+                val user = it.getValue<User>()!!
 //            Toast.makeText(context, user?.tokenFcm?.fcm ?: "fail", Toast.LENGTH_SHORT).show()
 
-            /* PAYMENT LOGIC START */
+                /* PAYMENT LOGIC START */
 
-            val distance = abs(user.startDestination - user.endDestination)
+                val distance = abs(user.startDestination - user.endDestination)
 
-            // Magic mathematical ratio to calculate, used with distance
-            val magicNumber = 10
-            val pendingPaymentCalculated = user.pendingPayment + distance * magicNumber
-            //                                 ^ accumulation of old pending payment
+                // Magic mathematical ratio to calculate, used with distance
+                val magicNumber = 10
+                val pendingPaymentCalculated = user.pendingPayment + distance * magicNumber
+                //                                 ^ accumulation of old pending payment
 
-            Toast.makeText(context, "$pendingPaymentCalculated", Toast.LENGTH_SHORT).show()
-            if (user.walletBalance >= pendingPaymentCalculated) {
-                user.apply {
-                    walletBalance -= pendingPaymentCalculated
-                    pendingPayment = 0
+                Toast.makeText(context, "$pendingPaymentCalculated", Toast.LENGTH_SHORT).show()
+                if (user.walletBalance >= pendingPaymentCalculated) {
+                    user.apply {
+                        walletBalance -= pendingPaymentCalculated
+                        pendingPayment = 0
+                    }
+                } else {
+                    user.apply {
+                        pendingPayment = pendingPaymentCalculated
+                    }
                 }
-            } else {
-                user.apply {
-                    pendingPayment = pendingPaymentCalculated
-                }
+
+                /* PAYMENT LOGIC END */
+
+                // make hash map, and update to database
+                val userValues = user.toMap()
+                val childUpdates = hashMapOf<String, Any>(
+                    "/$id/" to userValues
+                )
+
+                // update database
+                database.updateChildren(childUpdates)
+
+            }.addOnFailureListener {
+                Toast.makeText(context, "Error: Please Try again!", Toast.LENGTH_SHORT).show()
             }
-
-            /* PAYMENT LOGIC END */
-
-            // make hash map, and update to database
-            val userValues = user.toMap()
-            val childUpdates = hashMapOf<String, Any>(
-                "/$id/" to userValues
-            )
-
-            // update database
-            database.updateChildren(childUpdates)
-
-        }.addOnFailureListener {
-            Toast.makeText(context, "Error: Please Try again!", Toast.LENGTH_SHORT).show()
         }
-
     }
 }
 /*
