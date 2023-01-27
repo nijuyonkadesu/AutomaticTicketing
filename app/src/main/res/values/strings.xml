@@ -14,5 +14,6 @@
     <string name="mail">Mail</string>
     <string name="wallet">Wallet</string>
     <string name="rfid">RFID</string>
+    <string name="seats">Seats: %s / 50</string>
 
 </resources>
