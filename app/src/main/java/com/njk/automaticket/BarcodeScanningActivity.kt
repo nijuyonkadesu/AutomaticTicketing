@@ -12,6 +12,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.njk.automaticket.data.RfidHolder
 import com.njk.automaticket.databinding.FragmentRfidBinding
 import com.njk.automaticket.utils.UserDataStore
 import kotlinx.coroutines.*
@@ -96,6 +97,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
 private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding: FragmentRfidBinding, val context: Context) : ImageAnalysis.Analyzer {
     // Datastore
     private var isSaved = false
+    val profileDao = (context as TicketApplication).profileDb.profileDao()
 
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("RestrictedApi")
@@ -139,7 +141,14 @@ private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding
                             CoroutineScope(Dispatchers.IO).launch {
                                 val userDataStore = UserDataStore(context)
                                 userDataStore.saveRfid(rawText)
-                                Log.d(TAG, "Saving... $rawText")
+
+                                profileDao.updateRfid(RfidHolder(
+                                    1,
+                                    rfidNumber = rawText.toInt()
+                                ))
+
+                                if(BuildConfig.DEBUG)
+                                    Log.d(TAG, "Saving... $rawText")
                             }
                         }
 //                            }

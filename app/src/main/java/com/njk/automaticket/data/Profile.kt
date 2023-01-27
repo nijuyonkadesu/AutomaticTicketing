@@ -3,6 +3,7 @@ package com.njk.automaticket.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.text.NumberFormat
 
 @Entity(tableName = "profile")
 data class Profile(
@@ -18,7 +19,13 @@ data class Profile(
     val lastBoarding: Long,
     @ColumnInfo(name = "wallet_balance", defaultValue = "0")
     val walletBalance: Double,
-)
+    @ColumnInfo(name = "rfid_number", defaultValue = "0")
+    val rfidNumber: Int,
+) {
+    fun getCurrency(): String {
+        return NumberFormat.getInstance().format(walletBalance).toString()
+    }
+}
 
 // Updated when signed in for the first time
 @Entity
@@ -50,6 +57,13 @@ data class TravelStats(
     @ColumnInfo(name = "last_boarding")
     val lastBoarding: Long,
 )
-
+// When scanning QR
+@Entity
+data class RfidHolder(
+    @ColumnInfo(name = "id")
+    val id: Int,
+    @ColumnInfo(name = "rfid_number")
+    val rfidNumber: Int,
+)
 // TODO: travelCount, lastBoarding
 // TODO: formatted date

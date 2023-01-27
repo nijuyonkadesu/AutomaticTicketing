@@ -4,8 +4,8 @@ import com.google.firebase.database.Exclude
 
 data class User(
     var rfid: Int = 0,
-    var walletBalance: Int = 0,
-    var pendingPayment: Int = 0,
+    var walletBalance: Double = 0.0,
+    var pendingPayment: Double = 0.0,
     var ticketStatus: TicketStatus = TicketStatus.INVALID,
     var tokenFcm: FcmToken = FcmToken("zero"),
     var startDestination: Int = 0,

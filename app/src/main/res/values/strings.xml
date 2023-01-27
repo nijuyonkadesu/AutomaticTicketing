@@ -10,5 +10,9 @@
     <string name="payment">Payment: %s</string>
     <string name="balance">Balance: %s</string>
     <string name="distance">Distance: %s</string>
+    <string name="name">Name</string>
+    <string name="mail">Mail</string>
+    <string name="wallet">Wallet</string>
+    <string name="rfid">RFID</string>
 
 </resources>

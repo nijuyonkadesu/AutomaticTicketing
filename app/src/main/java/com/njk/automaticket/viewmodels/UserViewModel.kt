@@ -12,10 +12,14 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.njk.automaticket.BuildConfig
+import com.njk.automaticket.TicketApplication
+import com.njk.automaticket.data.Balance
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
 import com.njk.automaticket.utils.UserDataStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -68,8 +72,8 @@ class UserViewModel: ViewModel() {
             Log.d(TAG, userDataStore.getRfid().toString())
         return User(
             userDataStore.getRfid(),
-            1000,
-            100,
+            1500.0,
+            20.0,
             TicketStatus.INVALID,
             fcm,
             20, // 0 because, this function is ran just once when user installs the app
@@ -85,6 +89,9 @@ class UserViewModel: ViewModel() {
         }
     }
     fun initiatePayment(context: Context) {
+        // using this update profile database
+        // TODO: generalize dao access
+        val profileDao = (context.applicationContext as TicketApplication).profileDb.profileDao()
         // data snapshot of User
         val userDataStore = UserDataStore(context)
         viewModelScope.launch {
@@ -98,7 +105,7 @@ class UserViewModel: ViewModel() {
                 val distance = abs(user.startDestination - user.endDestination)
 
                 // Magic mathematical ratio to calculate, used with distance
-                val magicNumber = 10
+                val magicNumber = 0.3
                 val pendingPaymentCalculated = user.pendingPayment + distance * magicNumber
                 //                                 ^ accumulation of old pending payment
 
@@ -106,7 +113,7 @@ class UserViewModel: ViewModel() {
                 if (user.walletBalance >= pendingPaymentCalculated) {
                     user.apply {
                         walletBalance -= pendingPaymentCalculated
-                        pendingPayment = 0
+                        pendingPayment = 0.0
                     }
                 } else {
                     user.apply {
@@ -115,6 +122,12 @@ class UserViewModel: ViewModel() {
                 }
 
                 /* PAYMENT LOGIC END */
+                CoroutineScope(Dispatchers.IO).launch {
+                    profileDao.updateWalletBalance(Balance(
+                        1,
+                        walletBalance = user.walletBalance
+                    ))
+                }
 
                 // make hash map, and update to database
                 val userValues = user.toMap()
