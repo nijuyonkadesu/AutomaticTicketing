@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -16,6 +16,7 @@ import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
 import com.njk.automaticket.utils.SaveUserRfid
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 
@@ -38,29 +39,29 @@ class UserViewModel: ViewModel() {
                 Log.d("firebase", "new unique Token: ${task.result}")
             })
     }
-    private fun getFcmToken(context: Context){
+    private suspend fun getFcmToken(context: Context){
         FirebaseMessaging.getInstance().token.addOnCompleteListener(
             OnCompleteListener { task ->
                 if (!task.isSuccessful) {
                     Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                     return@OnCompleteListener
                 }
-
                 // Get new FCM registration token
                 // TODO: Shift to dataStore
                 val fcm = FcmToken(task.result)
-                val user = createUser(fcm, context)
-                val id = context.getSharedPreferences("_", Context.MODE_PRIVATE)?.getString("id", "fail")!!
-
-                database.child(id).setValue(user)
+                viewModelScope.launch {
+                    val id = context.getSharedPreferences("_", Context.MODE_PRIVATE)?.getString("id", "fail")!!
+                    database.child(id).setValue(createUser(fcm, context))
+                }
                 context.getSharedPreferences("_", FirebaseMessagingService.MODE_PRIVATE)?.edit()?.putString("fcm", task.result)?.apply()
                 Log.d("firebase", "new FCM token: ${task.result}")
             })
     }
-    private fun createUser(fcm: FcmToken, context: Context): User {
+    private suspend fun createUser(fcm: FcmToken, context: Context): User {
         val saveUserRfid = SaveUserRfid(context)
+        Log.d(TAG, saveUserRfid.getRfid().toString())
         return User(
-            saveUserRfid.userRfid.asLiveData().value ?: 0,
+            saveUserRfid.getRfid(),
             1000,
             100,
             TicketStatus.INVALID,
@@ -73,7 +74,9 @@ class UserViewModel: ViewModel() {
     // Creates a new node in firebase realtime database
     fun createNewFirebaseUser(context: Context){
         getUserId(context)
-        getFcmToken(context)
+        viewModelScope.launch {
+            getFcmToken(context)
+        }
     }
     fun initiatePayment(context: Context) {
         val id = context.getSharedPreferences("_", Context.MODE_PRIVATE)?.getString("id", "fail")!!

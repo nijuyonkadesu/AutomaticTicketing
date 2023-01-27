@@ -32,12 +32,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
-            busViewModel.getBusDetails().observe(viewLifecycleOwner, Observer {
+            busViewModel.getBusDetails().observe(viewLifecycleOwner) {
                 testBtn.setOnClickListener {
-                    userViewModel.createNewFirebaseUser(requireContext())
+                    userViewModel.createNewFirebaseUser(requireContext().applicationContext)
                 }
                 payTestBtn.setOnClickListener {
-                    userViewModel.initiatePayment(requireContext())
+                    userViewModel.initiatePayment(requireContext().applicationContext)
                 }
                 paymentFb.text = getString(
                     R.string.payment, NumberFormat.getInstance().format(
@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
                     binding.ticketFb.setImageResource(R.drawable.ticket_grey)
                 else
                     binding.ticketFb.setImageResource(R.drawable.ticket_green)
-            })
+            }
         }
     }
 

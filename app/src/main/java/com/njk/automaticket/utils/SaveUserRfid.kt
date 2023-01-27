@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
 
 private const val USER_RFID_NAME = "user_rfid"
 
@@ -21,7 +20,7 @@ class SaveUserRfid(private val context: Context){
         }
     }
     // get the user's rfid
-    val userRfid: Flow<Int> = context.userDataStore.data.map {
-        it[RFID] ?: 0
+    suspend fun getRfid(): Int{
+        return context.userDataStore.data.first()[RFID] ?: 0
     }
 }
