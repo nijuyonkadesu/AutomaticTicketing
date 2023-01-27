@@ -19,7 +19,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.njk.automaticket.data.Personal
 import com.njk.automaticket.databinding.ActivityMainBinding
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val profileDao = (this.application as TicketApplication).profileDb.profileDao()
 
         setSupportActionBar(binding.toolbar)
 
@@ -53,7 +56,13 @@ class MainActivity : AppCompatActivity() {
 
         FirebaseAuth.getInstance().addAuthStateListener { firebaseAuth ->
             firebaseAuth.currentUser?.let {
-
+                CoroutineScope(Dispatchers.IO).launch {
+                    profileDao.insertName(Personal(
+                        id = 1,
+                        firstName = it.displayName ?: "user",
+                        mail = it.email ?: "not available",
+                    ))
+                }
             } ?: run {
                 signIn()
             }
