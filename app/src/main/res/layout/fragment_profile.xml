@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="24k"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="@+id/firstNameTitle"
         app:layout_constraintTop_toBottomOf="@+id/firstNameTitle" />
 
@@ -53,10 +53,10 @@
         android:id="@+id/materialDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/mailTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/firstName" />
+        app:layout_constraintTop_toBottomOf="@id/firstName"
+        app:layout_constraintBottom_toTopOf="@id/mailTitle" />
 
 <!--  Email  -->
 
@@ -76,6 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/mail"
+        android:paddingTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/mailIcon"
         app:layout_constraintTop_toBottomOf="@+id/firstName" />
 
@@ -85,17 +86,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="200@svce.ac.in"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="@+id/mailTitle"
         app:layout_constraintTop_toBottomOf="@+id/mailTitle" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/walletTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail" />
+        app:layout_constraintTop_toBottomOf="@+id/mail"
+        app:layout_constraintBottom_toTopOf="@+id/walletTitle" />
 
 <!--  Wallet Balance  -->
 
@@ -115,6 +116,7 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.Material3.BodyMedium"
         android:text="@string/wallet"
+        android:paddingTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/walletIcon"
         app:layout_constraintTop_toBottomOf="@+id/mail" />
 
@@ -124,16 +126,17 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.Material3.BodyLarge"
         tools:text="1000"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="@+id/walletTitle"
         app:layout_constraintTop_toBottomOf="@+id/walletTitle" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/walletAmount"
         app:layout_constraintEnd_toEndOf="parent"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walletAmount"
         app:layout_constraintBottom_toTopOf="@id/rfidTitle" />
 
     <!--  RFID   -->
@@ -154,6 +157,7 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.Material3.BodyMedium"
         android:text="@string/rfid"
+        android:paddingTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/rfidIcon"
         app:layout_constraintTop_toBottomOf="@+id/walletAmount" />
 
@@ -163,7 +167,7 @@
         android:layout_height="wrap_content"
         style="@style/TextAppearance.Material3.BodyLarge"
         tools:text="69696969"
-        android:paddingBottom="8dp"
+        android:paddingBottom="4dp"
         app:layout_constraintStart_toStartOf="@+id/rfidTitle"
         app:layout_constraintTop_toBottomOf="@+id/rfidTitle" />
 

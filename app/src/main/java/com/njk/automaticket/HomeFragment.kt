@@ -11,7 +11,12 @@ import com.njk.automaticket.viewmodels.BusViewModel
 import com.njk.automaticket.viewmodels.ProfileViewModel
 import com.njk.automaticket.viewmodels.ProfileViewModelFactory
 import com.njk.automaticket.viewmodels.UserViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
+import kotlin.math.abs
+import kotlin.math.round
 
 class HomeFragment : Fragment() {
 
@@ -37,35 +42,37 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.apply {
-            busViewModel.getBusDetails(requireContext().applicationContext).observe(viewLifecycleOwner) {
-                testBtn.setOnClickListener {
-                    userViewModel.createNewFirebaseUser(requireContext().applicationContext)
+        CoroutineScope(Dispatchers.Main).launch {
+            binding.apply {
+                busViewModel.getBusDetails(requireContext().applicationContext)
+                    .observe(viewLifecycleOwner) {
+                        testBtn.setOnClickListener {
+                            userViewModel.createNewFirebaseUser(requireContext().applicationContext)
+                        }
+                        payTestBtn.setOnClickListener {
+                            userViewModel.initiatePayment(requireContext().applicationContext)
+                        }
+                        paymentFb.text = getString(
+                            R.string.payment, NumberFormat.getCurrencyInstance().format(
+                                it.fare
+                            ).toString()
+                        )
+                        distanceFb.text = getString(
+                            R.string.distance,
+                            abs(round(it.onBoardDistance - it.dropOffDistance)).toString() + " km"
+                        )
+                        if (it.ticketStatus == 0) {
+                            binding.ticketFb.setImageResource(R.drawable.ticket_grey)
+                            profileViewModel.updateTravelStats()
+                        } else
+                            binding.ticketFb.setImageResource(R.drawable.ticket_green)
+                    }
+                profileViewModel.updateTravelStats().observe(viewLifecycleOwner) {
+                    seatsFb.text = getString(
+                        R.string.seats,
+                        it.travelCount.toString()
+                    )
                 }
-                payTestBtn.setOnClickListener {
-                    userViewModel.initiatePayment(requireContext().applicationContext)
-                }
-                paymentFb.text = getString(
-                    R.string.payment, NumberFormat.getInstance().format(
-                        it.fare
-                    ).toString()
-                )
-                distanceFb.text = getString(
-                    R.string.distance,
-                    it.onBoardDistance.toString()
-                )
-                if (it.ticketStatus == 0){
-                    binding.ticketFb.setImageResource(R.drawable.ticket_grey)
-                    profileViewModel.updateTravelStats()
-                }
-                else
-                    binding.ticketFb.setImageResource(R.drawable.ticket_green)
-            }
-            profileViewModel.updateTravelStats().observe(viewLifecycleOwner){
-                seatsFb.text = getString(
-                    R.string.seats,
-                    it.travelCount.toString()
-                )
             }
         }
     }

@@ -24,6 +24,7 @@
         android:id="@+id/bottom_navigation_view"
         app:itemRippleColor="?attr/colorPrimaryVariant"
         app:labelVisibilityMode="selected"
+        android:fitsSystemWindows="true"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

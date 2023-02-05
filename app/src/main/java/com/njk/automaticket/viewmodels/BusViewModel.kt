@@ -13,12 +13,16 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.njk.automaticket.BuildConfig
 import com.njk.automaticket.model.Bus
+import com.njk.automaticket.utils.UserDataStore
 
 class BusViewModel : ViewModel() {
     private var bus: MutableLiveData<Bus> = MutableLiveData()
 
-    fun getBusDetails(context: Context): LiveData<Bus> {
-        val busDatabase = Firebase.database(URL).getReference("Users").child("1395101461")
+    suspend fun getBusDetails(context: Context): LiveData<Bus> {
+        val userDataStore = UserDataStore(context) // .child("1395101461")
+        val busDatabase = Firebase.database(URL).getReference("Users").child(userDataStore.run {
+            getRfid().toString()
+        })
 
         val networkBusListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -40,7 +44,7 @@ class BusViewModel : ViewModel() {
     }
     init {
         Firebase.database.setPersistenceEnabled(true)
-        // Enable disk caching, to show data in the absence of network
+        // Enables disk caching, to show data in the absence of network
     }
-    // TODO: Connection Status https://firebase.google.com/docs/database/android/offline-capabilities
+    // Connection Status https://firebase.google.com/docs/database/android/offline-capabilities
 }
