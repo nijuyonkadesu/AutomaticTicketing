@@ -9,7 +9,7 @@
         tools:ignore="ScopedStorage" />
 
     <application
-        android:name="com.njk.automaticket.TicketApplication"
+        android:name=".TicketApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

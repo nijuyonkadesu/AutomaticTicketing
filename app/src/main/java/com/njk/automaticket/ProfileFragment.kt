@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.njk.automaticket.databinding.FragmentTicketBinding
+import com.njk.automaticket.databinding.FragmentProfileBinding
 import com.njk.automaticket.viewmodels.ProfileViewModel
 import com.njk.automaticket.viewmodels.ProfileViewModelFactory
 
 
-class TicketFragment: Fragment() {
-    private var _binding: FragmentTicketBinding? = null
+class ProfileFragment: Fragment() {
+    private var _binding: FragmentProfileBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,7 +26,7 @@ class TicketFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentTicketBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
 
     }

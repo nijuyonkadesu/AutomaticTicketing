@@ -11,9 +11,9 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_home"/>
     <fragment
-        android:id="@+id/ticket_dest"
-        android:name="com.njk.automaticket.TicketFragment"
-        android:label="Ticket Info" />
+        android:id="@+id/profile_dest"
+        android:name="com.njk.automaticket.ProfileFragment"
+        android:label="Profile Info" />
 <!--    <fragment-->
 <!--        android:id="@+id/rfid_dest"-->
 <!--        android:name="com.njk.automaticket.RfidFragment"-->
