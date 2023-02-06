@@ -10,8 +10,8 @@
         android:icon="@drawable/home"
         android:title="@string/home_nav"/>
     <item
-        android:id="@+id/ticket_dest"
+        android:id="@+id/profile_dest"
         android:enabled="true"
-        android:icon="@drawable/bus"
-        android:title="@string/ticket_nav"/>
+        android:icon="@drawable/profile"
+        android:title="@string/profile_nav"/>
 </menu>

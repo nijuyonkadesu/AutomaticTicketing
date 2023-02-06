@@ -12,11 +12,10 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.njk.automaticket.data.RfidHolder
 import com.njk.automaticket.databinding.FragmentRfidBinding
-import com.njk.automaticket.utils.SaveUserRfid
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.njk.automaticket.utils.UserDataStore
+import kotlinx.coroutines.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -97,9 +96,10 @@ class BarcodeScanningActivity: AppCompatActivity() {
 // Trying to get Barcode Scanner
 private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding: FragmentRfidBinding, val context: Context) : ImageAnalysis.Analyzer {
     // Datastore
-    private val saveUserRfid = SaveUserRfid(context)
     private var isSaved = false
+    val profileDao = (context as TicketApplication).profileDb.profileDao()
 
+    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("RestrictedApi")
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
@@ -137,8 +137,18 @@ private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding
                         listener(rawText)
 //                        Log.d(TAG, rawText)
                         if(rawText != "..." && !isSaved){
+                            isSaved = true
                             CoroutineScope(Dispatchers.IO).launch {
-                                saveUserRfid.saveRfid(rawText)
+                                val userDataStore = UserDataStore(context)
+                                userDataStore.saveRfid(rawText)
+
+                                profileDao.updateRfid(RfidHolder(
+                                    1,
+                                    rfidNumber = rawText.toInt()
+                                ))
+
+                                if(BuildConfig.DEBUG)
+                                    Log.d(TAG, "Saving... $rawText")
                             }
                         }
 //                            }

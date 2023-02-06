@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Move it</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
@@ -6,9 +6,14 @@
     <string name="previous">Previous</string>
     <string name="rfid_scan_nav">RFID</string>
     <string name="home_nav">Home</string>
-    <string name="ticket_nav">Ticket</string>
+    <string name="profile_nav" tools:ignore="ExtraTranslation">Profile</string>
     <string name="payment">Payment: %s</string>
     <string name="balance">Balance: %s</string>
     <string name="distance">Distance: %s</string>
+    <string name="name">Name</string>
+    <string name="mail">Mail</string>
+    <string name="wallet">Wallet</string>
+    <string name="rfid">RFID</string>
+    <string name="seats">Seats: %s / 50</string>
 
 </resources>

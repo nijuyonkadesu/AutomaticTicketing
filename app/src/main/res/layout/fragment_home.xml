@@ -35,6 +35,7 @@
             android:id="@+id/payment_fb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="4dp"
             android:text="@string/payment"
             android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,13 +45,21 @@
             android:id="@+id/distance_fb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
             android:text="@string/distance"
+
             android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            app:layout_constraintEnd_toEndOf="@+id/payment_fb"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/payment_fb"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/payment_fb" />
+
+        <TextView
+            android:id="@+id/seats_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seats"
+
+            android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            app:layout_constraintStart_toStartOf="@+id/distance_fb"
+            app:layout_constraintTop_toBottomOf="@+id/distance_fb" />
 
         <ImageView
             android:id="@+id/ticket_fb"
@@ -60,7 +69,7 @@
             android:src="@drawable/ticket_grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/distance_fb" />
+            app:layout_constraintTop_toBottomOf="@+id/seats_fb" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
