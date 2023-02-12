@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.njk.automaticket.databinding.FragmentHomeBinding
 import com.njk.automaticket.viewmodels.BusViewModel
 import com.njk.automaticket.viewmodels.ProfileViewModel
@@ -26,9 +26,9 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private val userViewModel: UserViewModel by viewModels()
-    private val busViewModel: BusViewModel by viewModels()
-    private val profileViewModel: ProfileViewModel by viewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private val busViewModel: BusViewModel by activityViewModels()
+    private val profileViewModel: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

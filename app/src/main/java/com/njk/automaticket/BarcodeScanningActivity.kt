@@ -1,7 +1,6 @@
 package com.njk.automaticket
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +17,6 @@ import com.njk.automaticket.data.RfidHolder
 import com.njk.automaticket.databinding.FragmentRfidBinding
 import com.njk.automaticket.utils.UserDataStore
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -33,6 +31,8 @@ class BarcodeScanningActivity: AppCompatActivity() {
 
     @Inject
     lateinit var profileDao: ProfileDao
+    @Inject
+    lateinit var userDataStore: UserDataStore
 
     // CameraX
     private var imageCapture: ImageCapture? = null
@@ -88,7 +88,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
                         it.setAnalyzer(cameraExecutor, BarcodeAnalyzer ({ code ->
                             Log.d(TAG, "QR: $code")
 
-                        }, binding, applicationContext, profileDao))
+                        }, binding, applicationContext, profileDao, userDataStore))
                     }
 
                 // Bind use cases to camera
@@ -108,7 +108,8 @@ private class BarcodeAnalyzer(
     private val listener: BarcodeListener,
     val binding: FragmentRfidBinding,
     val context: Context,
-    val profileDao: ProfileDao
+    val profileDao: ProfileDao,
+    val userDataStore: UserDataStore,
 ) : ImageAnalysis.Analyzer {
     // Datastore
     private var isSaved = false
@@ -154,7 +155,6 @@ private class BarcodeAnalyzer(
                         if(rawText != "..." && !isSaved){
                             isSaved = true
                             CoroutineScope(Dispatchers.IO).launch {
-                                val userDataStore = UserDataStore(context)
                                 userDataStore.saveRfid(rawText)
 
                                 profileDao.updateRfid(RfidHolder(
