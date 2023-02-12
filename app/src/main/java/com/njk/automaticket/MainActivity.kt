@@ -20,13 +20,22 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.njk.automaticket.data.Personal
+import com.njk.automaticket.data.ProfileDao
 import com.njk.automaticket.databinding.ActivityMainBinding
-import kotlinx.coroutines.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var profileDao: ProfileDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -34,7 +43,6 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val profileDao = (this.application as TicketApplication).profileDb.profileDao()
 
         setSupportActionBar(binding.toolbar)
 

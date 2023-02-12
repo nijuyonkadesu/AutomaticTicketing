@@ -14,20 +14,26 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.njk.automaticket.BuildConfig
 import com.njk.automaticket.TicketApplication
 import com.njk.automaticket.data.Balance
+import com.njk.automaticket.data.ProfileDao
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
 import com.njk.automaticket.utils.UserDataStore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.abs
 
 
 const val URL = "https://dummyyyyyy-aa5df-default-rtdb.asia-southeast1.firebasedatabase.app/"
 const val TAG = "firebase"
 
-class UserViewModel: ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    val profileDao: ProfileDao
+): ViewModel() {
 
     // Reference to firebase database
     private val database = Firebase.database(URL).getReference("Users")
@@ -89,9 +95,6 @@ class UserViewModel: ViewModel() {
         }
     }
     fun initiatePayment(context: Context) {
-        // using this update profile database
-        // TODO: generalize dao access
-        val profileDao = (context.applicationContext as TicketApplication).profileDb.profileDao()
         // data snapshot of User
         val userDataStore = UserDataStore(context)
         viewModelScope.launch {
