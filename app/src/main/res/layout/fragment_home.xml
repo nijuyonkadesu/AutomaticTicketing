@@ -15,8 +15,9 @@
             android:id="@+id/test_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="User Test"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/pay_test_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/distance_fb"
             app:layout_constraintTop_toBottomOf="@+id/ticket_fb" />
@@ -70,6 +71,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/seats_fb" />
+
+        <org.osmdroid.views.MapView android:id="@+id/map"
+            android:layout_marginTop="8dp"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            app:layout_constraintTop_toBottomOf="@id/pay_test_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

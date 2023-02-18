@@ -5,6 +5,7 @@ buildscript {
         lifecycle_version = '2.5.1'
         room_version = '2.5.0'
         hilt_version = '2.44.2'
+        osm_droid = '6.1.13'
     }
 
     dependencies {

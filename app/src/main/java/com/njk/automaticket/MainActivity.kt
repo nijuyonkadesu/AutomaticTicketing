@@ -46,9 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-//        val navController = findNavController(R.id.nav_host_fragment_content_main)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
+        // Navigation Graph to navigate between 3 pages
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         val navController = navHostFragment.navController
         appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -57,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         setupBottomNavMenu(navController)
 
-        // Request camera permissions
+        // Request necessary permissions
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
@@ -106,9 +104,6 @@ class MainActivity : AppCompatActivity() {
         bottomNav?.setupWithNavController(navController)
     }
     // [START get permission]
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults:
@@ -123,6 +118,9 @@ class MainActivity : AppCompatActivity() {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
 
     companion object {
         private const val REQUEST_CODE_PERMISSIONS = 10
@@ -130,7 +128,9 @@ class MainActivity : AppCompatActivity() {
             mutableListOf (
                 android.Manifest.permission.CAMERA,
                 android.Manifest.permission.RECORD_AUDIO,
-//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+//                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             ).toTypedArray()
     }
     // [END get permission]

@@ -120,4 +120,8 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
     implementation("androidx.hilt:hilt-work:1.0.0") // TODO: Delegate firebase refresh to workmanager
 //    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03" - this will cause issue
+
+    // Open Street Map - Custom MapView Implementation
+    implementation "org.osmdroid:osmdroid-android:${osm_droid}"
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/.keystore/nijuyonkadesu.jks
+/app/release/app-release.apk
+/app/release/output-metadata.json
+/app/google-services(backup).json
