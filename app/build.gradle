@@ -4,6 +4,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -48,6 +49,10 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+    }
+    kapt {
+        correctErrorTypes true
+        // Allow references to generated code
     }
 }
 
@@ -107,4 +112,12 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+
+    //Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:${hilt_version}"
+    kapt "com.google.dagger:hilt-android-compiler:${hilt_version}"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
+    implementation("androidx.hilt:hilt-work:1.0.0") // TODO: Delegate firebase refresh to workmanager
+//    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03" - this will cause issue
 }

@@ -8,20 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.njk.automaticket.databinding.FragmentProfileBinding
 import com.njk.automaticket.viewmodels.ProfileViewModel
-import com.njk.automaticket.viewmodels.ProfileViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class ProfileFragment: Fragment() {
     private var _binding: FragmentProfileBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-     private val profileViewModel: ProfileViewModel by activityViewModels {
-            ProfileViewModelFactory(
-                (activity?.application as TicketApplication).profileDb.profileDao()
-            )
-        }
+    private val profileViewModel: ProfileViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

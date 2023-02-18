@@ -12,18 +12,28 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.njk.automaticket.data.ProfileDao
 import com.njk.automaticket.data.RfidHolder
 import com.njk.automaticket.databinding.FragmentRfidBinding
 import com.njk.automaticket.utils.UserDataStore
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
 // emit values - temporary
 typealias BarcodeListener = (code: String) -> Unit
 const val TAG = "QR"
 
+@AndroidEntryPoint
 class BarcodeScanningActivity: AppCompatActivity() {
+
+    @Inject
+    lateinit var profileDao: ProfileDao
+    @Inject
+    lateinit var userDataStore: UserDataStore
+
     // CameraX
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
@@ -78,7 +88,7 @@ class BarcodeScanningActivity: AppCompatActivity() {
                         it.setAnalyzer(cameraExecutor, BarcodeAnalyzer ({ code ->
                             Log.d(TAG, "QR: $code")
 
-                        }, binding, applicationContext))
+                        }, binding, applicationContext, profileDao, userDataStore))
                     }
 
                 // Bind use cases to camera
@@ -94,10 +104,16 @@ class BarcodeScanningActivity: AppCompatActivity() {
 }
 
 // Trying to get Barcode Scanner
-private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding: FragmentRfidBinding, val context: Context) : ImageAnalysis.Analyzer {
+private class BarcodeAnalyzer(
+    private val listener: BarcodeListener,
+    val binding: FragmentRfidBinding,
+    val context: Context,
+    val profileDao: ProfileDao,
+    val userDataStore: UserDataStore,
+) : ImageAnalysis.Analyzer {
     // Datastore
     private var isSaved = false
-    val profileDao = (context as TicketApplication).profileDb.profileDao()
+//    val profileDao = (context as TicketApplication).profileDb.profileDao()
 
     @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("RestrictedApi")
@@ -139,7 +155,6 @@ private class BarcodeAnalyzer(private val listener: BarcodeListener, val binding
                         if(rawText != "..." && !isSaved){
                             isSaved = true
                             CoroutineScope(Dispatchers.IO).launch {
-                                val userDataStore = UserDataStore(context)
                                 userDataStore.saveRfid(rawText)
 
                                 profileDao.updateRfid(RfidHolder(

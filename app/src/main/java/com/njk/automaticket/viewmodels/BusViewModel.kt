@@ -14,12 +14,17 @@ import com.google.firebase.ktx.Firebase
 import com.njk.automaticket.BuildConfig
 import com.njk.automaticket.model.Bus
 import com.njk.automaticket.utils.UserDataStore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BusViewModel : ViewModel() {
+@HiltViewModel
+class BusViewModel @Inject constructor(
+    val userDataStore: UserDataStore
+) : ViewModel() {
     private var bus: MutableLiveData<Bus> = MutableLiveData()
 
     suspend fun getBusDetails(context: Context): LiveData<Bus> {
-        val userDataStore = UserDataStore(context) // .child("1395101461")
+         // .child("1395101461")
         val busDatabase = Firebase.database(URL).getReference("Users").child(userDataStore.run {
             getRfid().toString()
         })

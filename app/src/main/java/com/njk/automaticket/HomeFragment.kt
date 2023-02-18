@@ -9,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import com.njk.automaticket.databinding.FragmentHomeBinding
 import com.njk.automaticket.viewmodels.BusViewModel
 import com.njk.automaticket.viewmodels.ProfileViewModel
-import com.njk.automaticket.viewmodels.ProfileViewModelFactory
 import com.njk.automaticket.viewmodels.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +18,7 @@ import java.text.NumberFormat
 import kotlin.math.abs
 import kotlin.math.round
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -27,11 +28,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val userViewModel: UserViewModel by activityViewModels()
     private val busViewModel: BusViewModel by activityViewModels()
-    private val profileViewModel: ProfileViewModel by activityViewModels {
-        ProfileViewModelFactory(
-            (activity?.application as TicketApplication).profileDb.profileDao()
-        )
-    }
+    private val profileViewModel: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

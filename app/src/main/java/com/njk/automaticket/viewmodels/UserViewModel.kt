@@ -12,22 +12,28 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.njk.automaticket.BuildConfig
-import com.njk.automaticket.TicketApplication
 import com.njk.automaticket.data.Balance
+import com.njk.automaticket.data.ProfileDao
 import com.njk.automaticket.model.FcmToken
 import com.njk.automaticket.model.TicketStatus
 import com.njk.automaticket.model.User
 import com.njk.automaticket.utils.UserDataStore
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.abs
 
 
 const val URL = "https://dummyyyyyy-aa5df-default-rtdb.asia-southeast1.firebasedatabase.app/"
 const val TAG = "firebase"
 
-class UserViewModel: ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    val profileDao: ProfileDao,
+    val userDataStore: UserDataStore,
+): ViewModel() {
 
     // Reference to firebase database
     private val database = Firebase.database(URL).getReference("Users")
@@ -40,7 +46,6 @@ class UserViewModel: ViewModel() {
                     return@OnCompleteListener
                 }
                 viewModelScope.launch {
-                    val userDataStore = UserDataStore(context)
                     userDataStore.saveId(task.result)
                     if(BuildConfig.DEBUG)
                         Log.d("firebase", "new unique Token: ${task.result}")
@@ -56,18 +61,16 @@ class UserViewModel: ViewModel() {
                 }
                 // Get new FCM registration token
                 viewModelScope.launch {
-                    val userDataStore = UserDataStore(context)
                     userDataStore.saveFcm(task.result)
 
                     val fcm = FcmToken(userDataStore.getFcm())
-                    database.child(userDataStore.getId()).setValue(createUser(fcm, context))
+                    database.child(userDataStore.getId()).setValue(createUser(fcm))
                     if(BuildConfig.DEBUG)
                         Log.d("firebase", "new FCM token: ${task.result}")
                 }
             })
     }
-    private suspend fun createUser(fcm: FcmToken, context: Context): User {
-        val userDataStore = UserDataStore(context)
+    private suspend fun createUser(fcm: FcmToken): User {
         if(BuildConfig.DEBUG)
             Log.d(TAG, userDataStore.getRfid().toString())
         return User(
@@ -89,11 +92,6 @@ class UserViewModel: ViewModel() {
         }
     }
     fun initiatePayment(context: Context) {
-        // using this update profile database
-        // TODO: generalize dao access
-        val profileDao = (context.applicationContext as TicketApplication).profileDb.profileDao()
-        // data snapshot of User
-        val userDataStore = UserDataStore(context)
         viewModelScope.launch {
             val id = userDataStore.getId()
             database.child(id).get().addOnSuccessListener {
