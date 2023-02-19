@@ -15,5 +15,6 @@
     <string name="wallet">Wallet</string>
     <string name="rfid">RFID</string>
     <string name="seats">Seats: %s / 50</string>
+    <string name="ride_history_title">Ride History:</string>
 
 </resources>
