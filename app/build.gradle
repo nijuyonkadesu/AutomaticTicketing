@@ -124,4 +124,7 @@ dependencies {
     // Open Street Map - Custom MapView Implementation
     implementation "org.osmdroid:osmdroid-android:${osm_droid}"
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    // Date & Time
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 }
